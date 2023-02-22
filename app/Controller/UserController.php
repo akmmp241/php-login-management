@@ -147,7 +147,7 @@ class UserController
         ]);
     }
 
-    public function postUpdatePassword()
+    public function postUpdatePassword(): void
     {
         $user = $this->sessionService->current();
 
