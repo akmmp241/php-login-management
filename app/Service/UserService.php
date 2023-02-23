@@ -14,7 +14,6 @@ use Akmalmp\BelajarPhpMvc\Model\UserRegisterRequest;
 use Akmalmp\BelajarPhpMvc\Model\UserRegisterResponse;
 use Akmalmp\BelajarPhpMvc\Repository\UserRepository;
 use Exception;
-use PDO;
 
 class UserService
 {
@@ -30,21 +29,24 @@ class UserService
     }
 
 
-    public function register(UserRegisterRequest $requet): UserRegisterResponse
+    /**
+     * @throws ValidationException
+     */
+    public function register(UserRegisterRequest $request): UserRegisterResponse
     {
         try {
             Database::beginTransaction();
-            $this->validateUserRegisterRequest($requet);
+            $this->validateUserRegisterRequest($request);
 
-            $user = $this->userRepository->findByID($requet->getId());
+            $user = $this->userRepository->findByID($request->getId());
             if ($user != null) {
                 throw new ValidationException("User id is already exist");
             }
 
             $user = new User();
-            $user->setId($requet->getId());
-            $user->setName($requet->getName());
-            $user->setPassword(password_hash($requet->getPassword(), PASSWORD_BCRYPT));
+            $user->setId($request->getId());
+            $user->setName($request->getName());
+            $user->setPassword(password_hash($request->getPassword(), PASSWORD_BCRYPT));
 
             $this->userRepository->save($user);
 
@@ -58,6 +60,9 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     private function validateUserRegisterRequest(UserRegisterRequest $request): void
     {
         if ($request->getId() == null || $request->getName() == null || $request->getPassword() == null ||
@@ -71,8 +76,11 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function login(UserLoginRequest $request): UserLoginResponse
-    {   
+    {
         $this->validateUserLoginRequest($request);
 
         $user = $this->userRepository->findByID($request->getId());
@@ -90,6 +98,9 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     private function validateUserLoginRequest(UserLoginRequest $request): void
     {
         if ($request->getId() == null || $request->getPassword() == null ||
@@ -103,6 +114,9 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function updateProfile(UserProfileUpdateRequest $request): UserProfileUpdateResponse
     {
         $this->validateUserProfileUpdateRequest($request);
@@ -129,6 +143,9 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     private function validateUserProfileUpdateRequest(UserProfileUpdateRequest $request): void
     {
         if ($request->getId() == null || $request->getName() == null ||
@@ -138,6 +155,9 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function updatePassword(UserPasswordUpdateRequest $request): UserProfileUpdateResponse
     {
         $this->validateUpdatePasswordRequest($request);
@@ -168,6 +188,9 @@ class UserService
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     private function validateUpdatePasswordRequest(UserPasswordUpdateRequest $request): void
     {
         if ($request->getId() == null || $request->getOldPassword() == null || $request->getNewPassword() == null ||

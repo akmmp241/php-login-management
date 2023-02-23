@@ -17,3 +17,8 @@ function getDatabaseConfig(): array
         ]
     ];
 }
+
+function getCSS(): string
+{
+    return "http://" . $_SERVER['SERVER_NAME'] . "/assets/";
+}
