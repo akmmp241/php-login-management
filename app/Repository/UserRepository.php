@@ -58,7 +58,7 @@ class UserRepository
         }
     }
 
-    public function deleteAll()
+    public function deleteAll(): void
     {
         $this->connection->exec("DELETE FROM users");
     }

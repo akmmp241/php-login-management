@@ -15,23 +15,20 @@ class SessionService
     private SessionRepository $sessionRepository;
     private UserRepository $userRepository;
 
-    /**
-     * @param SessionRepository $sessionRepository
-     */
     public function __construct(SessionRepository $sessionRepository, UserRepository $userRepository)
     {
         $this->sessionRepository = $sessionRepository;
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * @return string
-     */
     public static function getCOOKIENAME(): string
     {
         return self::$COOKIE_NAME;
     }
 
+    /**
+     * @throws Exception
+     */
     public function create(string $userId): Session
     {
 //        create session
@@ -46,15 +43,16 @@ class SessionService
             Database::getConnection()->commit();
         } catch (Exception $exception) {
             Database::getConnection()->rollBack();
+            throw $exception;
         }
 
 //        set cookie name from session id
-        setcookie(self::$COOKIE_NAME, $session->getId(), time() + (60 * 60 * 24 * 1), "/");
+        setcookie(self::$COOKIE_NAME, $session->getId(), time() + (60 * 60 * 24), "/");
 
         return $session;
     }
 
-    public function destroy()
+    public function destroy(): void
     {
         $sessionId = $_COOKIE[self::$COOKIE_NAME] ?? '';
         $this->sessionRepository->deleteById($sessionId);

@@ -31,7 +31,7 @@ class UserController
     }
 
 
-    public function register()
+    public function register(): void
     {
 //        open register page
         View::render('User/register', [
@@ -39,7 +39,7 @@ class UserController
         ]);
     }
 
-    public function postRegister()
+    public function postRegister(): void
     {
 //        make register request from register form
         $request = new UserRegisterRequest();
@@ -60,7 +60,7 @@ class UserController
         }
     }
 
-    public function login()
+    public function login(): void
     {
 //        open login page
         View::render('User/login', [
@@ -68,7 +68,7 @@ class UserController
         ]);
     }
 
-    public function postLogin()
+    public function postLogin(): void
     {
 //        make login request from login form
         $request = new UserLoginRequest();
@@ -90,14 +90,14 @@ class UserController
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
 //        destroy session & redirect to home 'index'
         $this->sessionService->destroy();
         View::redirect("/");
     }
 
-    public function updateProfile()
+    public function updateProfile(): void
     {
         $user = $this->sessionService->current();
 //        open profile page
@@ -110,7 +110,7 @@ class UserController
         ]);
     }
 
-    public function postUpdateProfile()
+    public function postUpdateProfile(): void
     {
         $user = $this->sessionService->current();
 //        make request from post form
@@ -136,7 +136,7 @@ class UserController
         }
     }
 
-    public function updatePassword()
+    public function updatePassword(): void
     {
         $user = $this->sessionService->current();
         View::render("User/password", [
